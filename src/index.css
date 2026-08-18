@@ -1,0 +1,1143 @@
+/* ============================================================
+   Design tokens
+   ------------------------------------------------------------
+   Dark ground because this gets read one-handed under gym
+   lighting, not because dark UI looks cool. Deep maroon and
+   burnt orange — the accent is spent in exactly two places
+   (the week counter and the prescribed load) so the number
+   you need mid-set is the brightest thing on screen.
+   ============================================================ */
+
+:root {
+  --night: #120c10;
+  --panel: #1c1218;
+  --panel-raised: #241620;
+  --line: #3a2430;
+  --maroon: #861f41;
+  --maroon-light: #a13a5c;
+  --accent: #e5751f;
+  --accent-light: #f08c3f;
+  --chalk: #f0ebe4;
+  --muted: #9a8891;
+  --dim: #cdbfc6;
+  --go: #4e9e6a;
+
+  --display: "Barlow Condensed", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius: 8px;
+  --radius-sm: 4px;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-flip: 420ms;
+
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 0.35), 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-raised: 0 3px 12px rgb(0 0 0 / 0.45), 0 1px 2px rgb(0 0 0 / 0.55);
+  --shadow-dock: 0 -2px 10px rgb(0 0 0 / 0.45);
+
+  --dock-h: 60px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  /* Barely-there cross-hatch, like light catching brushed/knurled
+     steel — meant to be felt more than seen, so it never fights
+     legibility. */
+  background: repeating-linear-gradient(115deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(25deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 5px), var(--night);
+  color: var(--chalk);
+  font-family: var(--body);
+  font-feature-settings: "tnum";
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- crash fallback ---------- */
+.crash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 100vh;
+  padding: 24px;
+  text-align: center;
+  background: var(--night);
+}
+
+.crash__title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.crash__note {
+  margin: 0;
+  max-width: 320px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.crash__reload {
+  margin-top: 8px;
+  padding: 11px 20px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: none;
+  color: var(--chalk);
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.crash__reload:active {
+  transform: scale(0.97);
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 16px calc(var(--dock-h) + 16px + env(safe-area-inset-bottom));
+}
+
+/* ---------- masthead ---------- */
+.masthead {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 13px;
+}
+
+/* A diagonal-hatched bar instead of a flat rule — reads as the
+   knurling cut into a barbell shaft. This is the one place the app
+   gets a literal material texture rather than a plain line. */
+.masthead::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background-image: repeating-linear-gradient(115deg, var(--maroon) 0 2px, transparent 2px 5px);
+}
+
+.masthead__eyebrow {
+  margin: 0 0 2px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.masthead__title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  text-transform: uppercase;
+  /* Stamped-metal lettering: a dark drop below, a hairline of light
+     above — like a number pressed into a plate rather than printed. */
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.7), 0 -1px 0 rgb(255 255 255 / 0.08);
+}
+
+.masthead__week {
+  text-align: right;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  background: rgb(0 0 0 / 0.32);
+  /* Recessed gauge-window look for the number that changes weekly. */
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.6), inset 0 -1px 0 rgb(255 255 255 / 0.04);
+}
+
+.masthead__week-num {
+  display: block;
+  font-family: var(--display);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.masthead__week.is-deload .masthead__week-num {
+  color: var(--muted);
+}
+
+.masthead__week-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- settings ---------- */
+.settings {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 14px 0 0;
+}
+
+.settings__field {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.settings__field input {
+  width: 84px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--chalk);
+  font-family: var(--mono);
+  font-size: 13px;
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.4);
+}
+
+.settings__field input[type="date"] {
+  width: 138px;
+}
+
+.settings__field--static {
+  gap: 6px;
+}
+
+.settings__value {
+  font-family: var(--mono);
+  color: var(--chalk);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---------- backup ---------- */
+.backup {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.backup__btn {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.backup__btn:active {
+  transform: scale(0.97);
+}
+
+.backup__file-input {
+  display: none;
+}
+
+.banner {
+  margin: 12px 0 0;
+  padding: 9px 12px;
+  border-left: 3px solid var(--maroon);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: rgb(134 31 65 / 0.28);
+  font-size: 12.5px;
+}
+
+/* ---------- dock nav ----------
+   Fixed to the bottom, thumb-reachable — this is read one-handed
+   mid-set, so primary navigation lives where the thumb already is. */
+.dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  gap: 4px;
+  max-width: 720px;
+  height: var(--dock-h);
+  margin: 0 auto;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: var(--shadow-dock);
+}
+
+.dock__tab {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 4px;
+  overflow: hidden;
+  border: none;
+  border-top: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-standard),
+    border-color var(--dur-base) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.dock__tab.is-on {
+  color: var(--chalk);
+  border-top-color: var(--accent);
+  /* A soft chalk-dust glow behind the active tab's top edge, right
+     where the accent line already sits. */
+  background: radial-gradient(ellipse 70% 100% at 50% 0%, rgb(240 235 228 / 0.08), transparent 70%);
+}
+
+.dock__tab:active {
+  transform: scale(0.96);
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 18px 0 12px;
+  font-family: var(--body);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* A small plate-face bullet — the same quiet motif everywhere a
+   section starts, standing in for the generic "01 / 02" numbering
+   this app doesn't need (the sections aren't a sequence). */
+.section::before {
+  content: "";
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--muted), transparent 70%);
+}
+
+.section-note {
+  margin: -6px 0 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* ---------- exercise card ---------- */
+.card {
+  margin-bottom: 10px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  /* A faint top highlight over the flat panel colour — light
+     catching a flat surface rather than a printed-flat card. */
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.03), transparent 45%), var(--panel);
+  box-shadow: var(--shadow-card);
+}
+
+.card--anchor {
+  border-left: 4px solid var(--accent);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.04), transparent 45%), var(--panel-raised);
+  /* The inset shadow next to the border gives the accent stripe a
+     rounded, cylindrical read — a bar's sleeve, not a paint stripe. */
+  box-shadow: var(--shadow-raised), inset 3px 0 4px rgb(0 0 0 / 0.35);
+}
+
+.card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card__name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.card__scheme {
+  margin: 3px 0 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.tag {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.tag--anchor {
+  background: var(--accent);
+  color: #2a1200;
+}
+
+.tag--new {
+  background: var(--maroon);
+  color: var(--chalk);
+}
+
+.tag--stalled {
+  background: #4a3a20;
+  color: #e8c88a;
+}
+
+.card__max {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.card__max-num {
+  display: block;
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+.card__max-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card__note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.card__swap-note {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.card__swap-back {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--dim);
+  font-size: 11px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- substitutions ----------
+   Reference tool, not a target — no accent here. Accent stays spent
+   on the week counter and the prescribed load, nowhere else. */
+.sub {
+  margin-top: 8px;
+}
+
+.sub__toggle {
+  padding: 5px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.sub__toggle:active {
+  transform: scale(0.97);
+}
+
+.sub__list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sub__pick {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgb(0 0 0 / 0.2);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.sub__pick:active {
+  transform: scale(0.98);
+}
+
+.sub__item.is-active .sub__pick {
+  border-color: var(--go);
+  background: rgb(78 158 106 / 0.12);
+}
+
+.sub__item-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sub__name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sub__load {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--dim);
+}
+
+.sub__why {
+  margin: 3px 0 0;
+  font-size: 11.5px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.sub__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.sub__tag {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--panel-raised);
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- prescription ---------- */
+.rx {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 11px;
+  padding: 9px 11px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.2));
+  /* Recessed readout, like a gauge set into a machine rather than a
+     flat tinted box — this is the number read mid-set, at a glance. */
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.6), inset 0 0 0 1px rgb(255 255 255 / 0.02);
+}
+
+.rx__label {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.rx__load {
+  font-family: var(--display);
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.rx__unit {
+  font-family: var(--body);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.rx__reps {
+  font-size: 20px;
+  color: var(--chalk);
+}
+
+.rx__backoff {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.rx__empty {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- history strip ---------- */
+.strip {
+  display: flex;
+  gap: 4px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+}
+
+.strip__box {
+  flex: 0 0 auto;
+  min-width: 52px;
+  padding: 5px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgb(0 0 0 / 0.3);
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.5);
+  text-align: center;
+  transition: border-color var(--dur-base) var(--ease-standard),
+    background-color var(--dur-base) var(--ease-standard);
+}
+
+.strip__box.is-up {
+  border-color: var(--go);
+}
+
+.strip__box.is-best {
+  border-color: var(--accent);
+  background: rgb(229 117 31 / 0.12);
+}
+
+.strip__num {
+  display: block;
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.strip__sub {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--muted);
+}
+
+/* ---------- entry ----------
+   One .entry row per set. Multiple rows stack for multi-set logging. */
+.entry {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  margin-top: 8px;
+}
+
+.entry__set-num {
+  flex-shrink: 0;
+  width: 18px;
+  padding-bottom: 9px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.entry__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.entry__field span {
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.entry__field input {
+  width: 86px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--night);
+  color: var(--chalk);
+  font-family: var(--mono);
+  font-size: 14px;
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.5);
+}
+
+.entry__remove {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 1px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.entry__footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 9px;
+}
+
+.entry__add {
+  padding: 6px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color var(--dur-base) var(--ease-standard),
+    border-color var(--dur-base) var(--ease-standard);
+}
+
+.entry__add:active {
+  transform: scale(0.97);
+}
+
+.entry__hint {
+  margin: 0;
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+/* ---------- rest timer ---------- */
+.rest {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 8px 11px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.2));
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.6), inset 0 0 0 1px rgb(255 255 255 / 0.02);
+}
+
+.rest__label {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--go);
+}
+
+.rest.is-done .rest__label {
+  color: var(--accent);
+}
+
+.rest__num {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--chalk);
+}
+
+.rest__skip {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* ---------- actions ---------- */
+.actions {
+  display: flex;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.actions__save {
+  flex: 1;
+  padding: 13px;
+  border: none;
+  border-radius: 6px;
+  /* Embossed plate-button: a highlight along the top edge and a
+     dark ridge underneath, like a pressable stamped-metal control
+     rather than a flat fill. */
+  background: linear-gradient(180deg, var(--accent-light), var(--accent));
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.35), inset 0 1px 0 rgb(255 255 255 / 0.25);
+  color: #2a1200;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.actions__save:active {
+  box-shadow: inset 0 1px 4px rgb(0 0 0 / 0.4);
+}
+
+.actions__reset {
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-base) var(--ease-standard),
+    color var(--dur-base) var(--ease-standard);
+}
+
+/* A destructive action gets one tap to arm, a second to actually fire -
+   this needs to look different enough that a second reflexive tap
+   reads as "confirming," not "the first tap didn't register." */
+.actions__reset.is-confirming {
+  border-color: var(--maroon);
+  color: var(--chalk);
+  background: rgb(134 31 65 / 0.28);
+}
+
+.actions__save:active,
+.actions__reset:active {
+  transform: scale(0.97);
+}
+
+/* ---------- progress ---------- */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+
+.pill {
+  padding: 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-base) var(--ease-standard),
+    border-color var(--dur-base) var(--ease-standard),
+    color var(--dur-base) var(--ease-standard);
+}
+
+.pill.is-on {
+  border-color: var(--maroon);
+  background: linear-gradient(180deg, var(--maroon-light), var(--maroon));
+  color: var(--chalk);
+}
+
+.pill:active {
+  transform: scale(0.95);
+}
+
+.chart {
+  padding: 12px 6px 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.empty {
+  padding: 26px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- session history ----------
+   .history__day reuses .card for its panel styling. */
+.history {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.history__date {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.history__label {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.history__exercises {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history__exercise {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-top: 1px solid rgb(58 36 48 / 0.5);
+  font-size: 13px;
+}
+
+.history__ex-detail {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.table th {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--muted);
+}
+
+.table thead th:first-child,
+.table tbody th {
+  text-align: left;
+}
+
+.table tbody th {
+  font-family: var(--body);
+  font-size: 13.5px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--chalk);
+}
+
+.table td {
+  padding: 9px 8px;
+  border-bottom: 1px solid rgb(58 36 48 / 0.5);
+  font-family: var(--mono);
+  text-align: right;
+}
+
+.table .is-solid {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.table .is-strong {
+  color: var(--go);
+  font-weight: 600;
+}
+
+.prose {
+  font-size: 13px;
+  line-height: 1.62;
+  color: var(--dim);
+}
+
+.prose p {
+  margin: 0 0 10px;
+}
+
+.prose strong {
+  color: var(--chalk);
+}
+
+/* ---------- toast ----------
+   Both the save confirmation and the SW-update prompt render inside
+   this one fixed, stacking column so they're never both painted at
+   the same position — column-reverse puts the transient save toast
+   (first in the JSX) closest to the dock, with the persistent update
+   prompt, if present, sitting above it instead of underneath it. */
+.toast-stack {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--dock-h) + 14px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast {
+  margin: 0;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: var(--maroon);
+  color: var(--chalk);
+  font-size: 13px;
+  animation: toast-in var(--dur-base) var(--ease-out);
+}
+
+.toast--update {
+  border: none;
+  font-family: var(--body);
+  cursor: pointer;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- flip number (signature element) ----------
+   Mechanical digit-flip for the two places the accent lives: the
+   week counter and the prescribed load. Barlow Condensed is already
+   "scoreboard numerals" — this makes that literal on the two numbers
+   that change. Skipped entirely in JS under prefers-reduced-motion,
+   so it never depends on the animation actually running. */
+.flip-num {
+  display: inline-block;
+  perspective: 400px;
+}
+
+/* Two classes beat one, regardless of source order — lets the
+   masthead's block-for-right-alignment layout win over the
+   inline-block default above without fighting cascade position. */
+.masthead__week-num.flip-num {
+  display: block;
+}
+
+.flip-num__tile {
+  position: relative;
+  display: inline-block;
+  /* Without this, the front/back faces' own rotateX transforms get
+     flattened into the tile's 2D plane in some engines instead of
+     turning in 3D — a cross-fade instead of a flip. */
+  transform-style: preserve-3d;
+}
+
+.flip-num__tile.is-flipping {
+  animation: flip-num-turn var(--dur-flip) var(--ease-standard);
+}
+
+.flip-num__flap--front {
+  backface-visibility: hidden;
+}
+
+.flip-num__flap--back {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(180deg);
+  backface-visibility: hidden;
+}
+
+@keyframes flip-num-turn {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-180deg);
+  }
+}
+
+@media (max-width: 420px) {
+  .masthead__title {
+    font-size: 38px;
+  }
+
+  .entry__field input {
+    width: 74px;
+  }
+
+  .entry__hint {
+    display: none;
+  }
+
+  /* 5 tabs at this width leave ~55-60px each — "Progress" is the
+     longest label and the one most at risk of wrapping/clipping. */
+  .dock__tab {
+    padding: 6px 2px;
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
