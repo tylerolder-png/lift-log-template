@@ -2,6 +2,7 @@ import type { Profile, Session } from "./types";
 
 const PROFILE_KEY = "liftlog:profile:v1";
 const SESSIONS_KEY = "liftlog:sessions:v1";
+const WELCOME_KEY = "liftlog:welcomed:v1";
 
 export interface LiftStore {
   loadProfile(): Promise<Profile | null>;
@@ -28,6 +29,18 @@ export const localStore: LiftStore = {
     write(SESSIONS_KEY, sessions);
   },
 };
+
+/**
+ * Not part of `LiftStore` on purpose — this is a client-only UI dismissal
+ * flag, not domain data. It would never make sense to sync to a server.
+ */
+export function hasSeenWelcome(): boolean {
+  return read<boolean>(WELCOME_KEY) === true;
+}
+
+export function markWelcomeSeen(): void {
+  write(WELCOME_KEY, true);
+}
 
 /** In-memory store for tests and for environments without localStorage. */
 export function createMemoryStore(): LiftStore {

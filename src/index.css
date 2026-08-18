@@ -114,6 +114,91 @@ body {
   transform: scale(0.97);
 }
 
+/* ---------- welcome ---------- */
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px 20px;
+  background: var(--night);
+}
+
+.welcome__card {
+  max-width: 380px;
+}
+
+.welcome__title {
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--maroon);
+  font-family: var(--display);
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.7), 0 -1px 0 rgb(255 255 255 / 0.08);
+}
+
+.welcome__lede {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--dim);
+}
+
+.welcome__steps {
+  margin: 0 0 20px;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--dim);
+}
+
+.welcome__steps li {
+  margin-bottom: 10px;
+}
+
+.welcome__steps strong {
+  color: var(--chalk);
+}
+
+.welcome__privacy {
+  margin: 0 0 22px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--line);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.welcome__privacy strong {
+  color: var(--dim);
+}
+
+.welcome__start {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--maroon-light), var(--maroon));
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.35), inset 0 1px 0 rgb(255 255 255 / 0.15);
+  color: var(--chalk);
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.welcome__start:active {
+  transform: scale(0.97);
+  box-shadow: inset 0 1px 4px rgb(0 0 0 / 0.4);
+}
+
 .app {
   max-width: 720px;
   margin: 0 auto;

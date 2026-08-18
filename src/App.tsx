@@ -6,10 +6,12 @@ import { buildBackup, parseBackup } from "./lib/backup";
 import { epley } from "./lib/oneRepMax";
 import { isNewPR } from "./lib/pr";
 import { isDeloadWeek } from "./lib/progression";
+import { hasSeenWelcome, markWelcomeSeen } from "./lib/storage";
 import { currentStreak } from "./lib/streak";
 import type { SetEntry } from "./lib/types";
 import { ExerciseCard, type DraftSet } from "./components/ExerciseCard";
 import { FlipNumber } from "./components/FlipNumber";
+import { Welcome } from "./components/Welcome";
 
 /** Window to tap "Reset to baseline" again before the confirm state clears. */
 const RESET_CONFIRM_MS = 4000;
@@ -23,6 +25,7 @@ const EMPTY_DRAFT: DraftSet = { weight: "", reps: "" };
 
 export default function App() {
   const log = useLiftLog();
+  const [welcomed, setWelcomed] = useState(hasSeenWelcome);
   const [tab, setTab] = useState(DAYS[0]!.id);
   const [draft, setDraft] = useState<Record<string, DraftSet[]>>({});
   const [toast, setToast] = useState("");
@@ -125,6 +128,17 @@ export default function App() {
     const setWord = `${entries.length} set${entries.length > 1 ? "s" : ""}`;
     const prSuffix = newPRs.length > 0 ? ` New PR: ${newPRs.join(", ")}!` : "";
     flash(`Logged ${setWord}.${prSuffix}`);
+  }
+
+  if (!welcomed) {
+    return (
+      <Welcome
+        onDismiss={() => {
+          markWelcomeSeen();
+          setWelcomed(true);
+        }}
+      />
+    );
   }
 
   if (!log.ready) {
