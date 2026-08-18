@@ -5,7 +5,7 @@ logged sets. No accounts, no backend — everything lives in your browser's
 `localStorage`. Set your bodyweight, log a hard set on each exercise, and it
 starts prescribing loads from there.
 
-**Live demo:** _(add after deploying)_
+**Live demo:** https://lift-log-template.vercel.app
 
 ## Getting started
 
